@@ -117,6 +117,7 @@ footer { margin-top: auto; opacity: 0.7; }
         <button onclick="izracunaj()">Izračunaj</button>
         <button onclick="obrisiSve()">🗑 Obriši sve</button>
         <button onclick="promijeniTemu()">💡 Tema</button>
+        <button id="installBtn" style="display:none;">📲 Instaliraj app</button>
     </div>
 
     <h2 id="rezultat"></h2>
@@ -184,7 +185,7 @@ function izracunaj(){
                  "😬 Moraš učiti";
 }
 
-// 🧹 NOVO — obriši sve
+// 🧹 Obriši sve
 function obrisiSve(){
     document.getElementById("ocjene").innerHTML = "";
     localStorage.removeItem("ocjene");
@@ -206,6 +207,28 @@ function ucitaj(){
 }
 
 ucitaj();
+
+// 🔥 PWA Instalacija
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+
+    const btn = document.getElementById('installBtn');
+    btn.style.display = 'block';
+
+    btn.addEventListener('click', () => {
+        btn.style.display = 'none';
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('Korisnik instalirao app');
+            }
+            deferredPrompt = null;
+        });
+    });
+});
 </script>
 
 </body>
